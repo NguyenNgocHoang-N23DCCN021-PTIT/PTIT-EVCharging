@@ -1,17 +1,23 @@
 <Project>
-  <!-- Cờ xác nhận bật tính năng Quản lý Package Tập trung ở cấp độ package -->
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   
-  <!-- Nhóm ItemGroup chứa danh sách các thư viện và phiên bản của chúng -->
   <ItemGroup>
-    <!-- Khai báo thư viện tạo OpenAPI/Swagger (dùng cho tài liệu API), khóa chặt ở phiên bản 8.0.0 -->
+    <!-- Các thư viện cũ -->
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
-    
-    <!-- Khai báo thư viện giao diện Swagger, khóa chặt ở phiên bản 6.5.0 -->
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     
-    <!-- Sau này, nếu bạn cài thêm Entity Framework hay RabbitMQ, bạn sẽ khai báo phiên bản (Version) của chúng tại đây -->
+    <!-- CÁC THƯ VIỆN MỚI THÊM CHO .NET ASPIRE -->
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="8.2.2" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="8.10.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="8.2.2" />
+    
+    <!-- Đã đồng bộ tất cả về 1.11.1 -->
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.1" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.11.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.11.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.11.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.11.1" />
   </ItemGroup>
 </Project>
