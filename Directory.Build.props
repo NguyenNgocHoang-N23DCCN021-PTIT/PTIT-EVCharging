@@ -1,0 +1,16 @@
+<Project>
+  <!-- Nhóm các thuộc tính cấu hình chung -->
+  <PropertyGroup>
+    <!-- Quy định phiên bản .NET được sử dụng để build (ở đây là .NET 8) -->
+    <TargetFramework>net8.0</TargetFramework>
+    
+    <!-- Tự động using các thư viện cơ bản (như System, System.Linq) cho toàn bộ file .cs, giúp code ngắn gọn hơn -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- Bật tính năng kiểm tra Nullable Reference Types, giúp cảnh báo code có khả năng bị lỗi NullReferenceException -->
+    <Nullable>enable</Nullable>
+    
+    <!-- Kích hoạt tính năng Quản lý Package Tập trung (Central Package Management) cho toàn bộ hệ thống -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+</Project>
