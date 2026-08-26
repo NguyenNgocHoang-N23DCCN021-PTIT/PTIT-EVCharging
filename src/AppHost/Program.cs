@@ -31,5 +31,7 @@ builder.AddProject<Projects.Billing_API>("billing-api")
 // 6. Identity quản lý user, lưu tài khoản vào Postgres
 builder.AddProject<Projects.Identity_API>("identity-api")
        .WithReference(postgres);
+// Đăng ký API Gateway vào hệ thống
+builder.AddProject<Projects.ApiGateway>("api-gateway");
 
 builder.Build().Run();

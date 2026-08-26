@@ -24,6 +24,7 @@
     <ProjectReference Include="..\SmartCharging.API\SmartCharging.API.csproj" />
     <ProjectReference Include="..\Billing.API\Billing.API.csproj" />
     <ProjectReference Include="..\Identity.API\Identity.API.csproj" />
+    <ProjectReference Include="..\ApiGateway\ApiGateway.csproj" />
   </ItemGroup>
 
 </Project>
