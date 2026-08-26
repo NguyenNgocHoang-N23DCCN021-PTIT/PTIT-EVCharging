@@ -1,0 +1,6 @@
+@Ocpp.Gateway_HostAddress = http://localhost:5051
+
+GET {{Ocpp.Gateway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

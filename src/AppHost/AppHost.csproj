@@ -17,4 +17,13 @@
     <PackageReference Include="Aspire.Hosting.Redis" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Ocpp.Gateway\Ocpp.Gateway.csproj" />
+    <ProjectReference Include="..\DeviceManagement.API\DeviceManagement.API.csproj" />
+    <ProjectReference Include="..\SessionManagement.API\SessionManagement.API.csproj" />
+    <ProjectReference Include="..\SmartCharging.API\SmartCharging.API.csproj" />
+    <ProjectReference Include="..\Billing.API\Billing.API.csproj" />
+    <ProjectReference Include="..\Identity.API\Identity.API.csproj" />
+  </ItemGroup>
+
 </Project>
