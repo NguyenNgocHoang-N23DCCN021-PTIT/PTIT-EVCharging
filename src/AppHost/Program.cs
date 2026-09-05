@@ -9,10 +9,7 @@ var rabbitmq = builder.AddRabbitMQ("rabbitmq-bus").WithManagementPlugin();
 builder.AddProject<Projects.Ocpp_Gateway>("ocpp-gateway")
        .WithReference(rabbitmq);
 
-// 2. DeviceManagement lưu thông tin trụ sạc vào Postgres, và cần RabbitMQ để lắng nghe sự kiện
-builder.AddProject<Projects.DeviceManagement_API>("device-management-api")
-       .WithReference(postgres)
-       .WithReference(rabbitmq);
+
 
 // 3. SessionManagement quản lý phiên sạc thời gian thực, cần Redis để đọc/ghi tốc độ cao
 builder.AddProject<Projects.SessionManagement_API>("session-management-api")
@@ -32,6 +29,10 @@ builder.AddProject<Projects.Billing_API>("billing-api")
 builder.AddProject<Projects.Identity_API>("identity-api")
        .WithReference(postgres);
 // Đăng ký API Gateway vào hệ thống
-builder.AddProject<Projects.ApiGateway>("api-gateway");
-
+var deviceApi = builder.AddProject<Projects.DeviceManagement_API>("device-management-api")
+                       .WithReference(postgres)
+                       .WithReference(rabbitmq);
+// Sửa lại đăng ký API Gateway (Thêm WithReference)
+builder.AddProject<Projects.ApiGateway>("api-gateway")
+       .WithReference(deviceApi);
 builder.Build().Run();
