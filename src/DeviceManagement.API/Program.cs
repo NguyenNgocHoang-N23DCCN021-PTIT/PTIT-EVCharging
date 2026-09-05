@@ -1,5 +1,8 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Khởi tạo Entity Framework Core kết nối với PostgreSQL thông qua kiến trúc Aspire.
+// "postgres-db" là tên bí danh phải khớp 100% với tên đã đăng ký trong AppHost.
+builder.AddNpgsqlDbContext<DeviceManagement.API.Infrastructure.DeviceDbContext>("postgres-db");
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
