@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Khởi tạo Entity Framework Core kết nối với PostgreSQL thông qua kiến trúc Aspire.
@@ -9,6 +10,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+// === KHỐI CODE MỚI THÊM: Tự động chạy Migration mỗi khi bật App ===
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<DeviceManagement.API.Infrastructure.DeviceDbContext>();
+    // Lệnh này bắt buộc EF Core phải tạo Database và các Bảng nếu nó chưa tồn tại
+    dbContext.Database.Migrate();
+}
+// ================================================================
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -10,6 +10,10 @@
     <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.5.3" />
     <PackageVersion Include="MassTransit.RabbitMQ" Version="9.2.1" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageVersion>
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <!-- CÁC THƯ VIỆN MỚI THÊM CHO .NET ASPIRE -->
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="8.2.2" />
