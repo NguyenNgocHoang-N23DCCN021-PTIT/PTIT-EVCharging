@@ -2,7 +2,10 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 // Khai báo các tài nguyên hạ tầng
 var redis = builder.AddRedis("redis-cache");
-var postgres = builder.AddPostgres("postgres-db").WithPgAdmin();
+var postgresServer = builder.AddPostgres("postgres-server").WithPgAdmin();
+// Bắt máy chủ này đẻ ra 2 Database riêng biệt!
+var deviceDb = postgresServer.AddDatabase("device-db");
+var identityDb = postgresServer.AddDatabase("identity-db");
 var rabbitmq = builder.AddRabbitMQ("rabbitmq-bus").WithManagementPlugin();
 
 // 1. Gateway giao tiếp với trụ sạc, nó cần đẩy sự kiện lên RabbitMQ
@@ -27,10 +30,10 @@ builder.AddProject<Projects.Billing_API>("billing-api")
 
 // 6. Identity quản lý user, lưu tài khoản vào Postgres
 builder.AddProject<Projects.Identity_API>("identity-api")
-       .WithReference(postgres);
+       .WithReference(identityDb);
 // Đăng ký API Gateway vào hệ thống
 var deviceApi = builder.AddProject<Projects.DeviceManagement_API>("device-management-api")
-                       .WithReference(postgres)
+                       .WithReference(deviceDb)
                        .WithReference(rabbitmq);
 // Sửa lại đăng ký API Gateway (Thêm WithReference)
 builder.AddProject<Projects.ApiGateway>("api-gateway")
