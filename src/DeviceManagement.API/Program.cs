@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using DeviceManagement.API.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Khởi tạo Entity Framework Core kết nối với PostgreSQL thông qua kiến trúc Aspire.
@@ -29,29 +30,36 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+// ==========================================
+// 1. API Lấy danh sách toàn bộ Trạm sạc (GET)
+// ==========================================
+app.MapGet("/api/chargers", async (DeviceManagement.API.Infrastructure.DeviceDbContext db) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    // Dùng EF Core lấy toàn bộ dữ liệu từ bảng Chargers trong PostgreSQL
+    var chargers = await db.Chargers.ToListAsync();
+    return Results.Ok(chargers);
 })
-.WithName("GetWeatherForecast")
+.WithName("GetChargers")
+.WithOpenApi();
+
+// ==========================================
+// 2. API Thêm mới một Trạm sạc (POST)
+// ==========================================
+app.MapPost("/api/chargers", async (string name, DeviceManagement.API.Infrastructure.DeviceDbContext db) =>
+{
+    // C# tạo ra một trạm sạc mới
+    var newCharger = new Charger(name);
+    
+    // Đưa vào vùng nhớ của EF Core
+    db.Chargers.Add(newCharger);
+    
+    // Lưu thẳng xuống Database PostgreSQL
+    await db.SaveChangesAsync();
+
+    // Trả về mã 201 (Created) kèm data vừa tạo (Đúng chuẩn RESTful)
+    return Results.Created($"/api/chargers/{newCharger.Id}", newCharger);
+})
+.WithName("CreateCharger")
 .WithOpenApi();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
