@@ -14,8 +14,9 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<DeviceManagement.API.Infrastructure.DeviceDbContext>();
-    // Lệnh này bắt buộc EF Core phải tạo Database và các Bảng nếu nó chưa tồn tại
-    dbContext.Database.Migrate();
+    // Dùng chiến lược thử lại (Retry) của EF Core: Nếu Database chưa kịp bật lên, nó sẽ chờ và thử lại thay vì sập luôn.
+    var strategy = dbContext.Database.CreateExecutionStrategy();
+    strategy.Execute(() => dbContext.Database.Migrate());
 }
 // ================================================================
 
