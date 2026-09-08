@@ -21,7 +21,13 @@ public class Charger : Entity<Guid>, IAggregateRoot
         Name = name;
         Status = "Available"; // Trạng thái mặc định ban đầu khi vừa lắp đặt
     }
-
+    // Constructor dùng khi nhận sự kiện kết nối lần đầu từ Gateway
+    public Charger(Guid id, string name)
+    {
+        Id = id;
+        Name = name;
+        Status = "Connected"; // Nhận sự kiện thì chắc chắn là đang kết nối
+    }
     // Constructor ẩn (dành riêng cho Entity Framework Core)
     // Lúc EF lấy dữ liệu từ Database lên, nó bắt buộc phải gọi hàm này để nhét data vào object
     protected Charger() { }

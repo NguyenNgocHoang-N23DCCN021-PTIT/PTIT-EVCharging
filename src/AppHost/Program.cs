@@ -6,6 +6,7 @@ var postgresServer = builder.AddPostgres("postgres-server").WithPgAdmin();
 // Bắt máy chủ này đẻ ra 2 Database riêng biệt!
 var deviceDb = postgresServer.AddDatabase("device-db");
 var identityDb = postgresServer.AddDatabase("identity-db");
+var billingDb = postgresServer.AddDatabase("billing-db");
 var rabbitmq = builder.AddRabbitMQ("rabbitmq-bus").WithManagementPlugin();
 
 // 1. Gateway giao tiếp với trụ sạc, nó cần đẩy sự kiện lên RabbitMQ
@@ -25,7 +26,7 @@ builder.AddProject<Projects.SmartCharging_API>("smart-charging-api")
 
 // 5. Billing lưu hóa đơn vào Postgres và tính tiền
 builder.AddProject<Projects.Billing_API>("billing-api")
-       .WithReference(postgres)
+       .WithReference(billingDb)
        .WithReference(rabbitmq);
 
 // 6. Identity quản lý user, lưu tài khoản vào Postgres

@@ -21,7 +21,18 @@ builder.Services.AddMassTransit(x =>
 // Dòng này báo cho hệ thống biết: Bất cứ khi nào có ai xin xài IEventBus, hãy ném cho họ cái RabbitMQEventBus.
 builder.Services.AddScoped<IEventBus, RabbitMQEventBus>();
 
+// ĐĂNG KÝ SWAGGER ĐỂ CÓ GIAO DIỆN TEST API
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
+
+// BẬT GIAO DIỆN SWAGGER
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // ==========================================
 // BƯỚC 2.3: GIẢ LẬP TRẠM SẠC KẾT NỐI (API)
@@ -39,6 +50,8 @@ app.MapPost("/api/simulate-connection", async (string chargerName, IEventBus eve
     
     // B4: Báo cho người dùng biết là đã hét thành công
     return Results.Ok(new { Message = "Đã phát loa thành công lên RabbitMQ!", EventData = connectedEvent });
-});
+})
+.WithName("SimulateConnection")
+.WithOpenApi();
 
 app.Run();

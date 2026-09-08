@@ -22,10 +22,9 @@ public class RabbitMQEventBus : IEventBus
     }
 
     // Đây là nơi logic thực sự xảy ra khi ai đó gọi hàm PublishAsync
-    public async Task PublishAsync(IntegrationEvent @event, CancellationToken cancellationToken = default)
+    public async Task PublishAsync<T>(T @event, CancellationToken cancellationToken = default) where T : IntegrationEvent
     {
-        // Gọi thư viện MassTransit để ném @event lên RabbitMQ
-        // Khối 'await' đảm bảo hệ thống không bị đơ chờ trong lúc truyền qua mạng
+        // Nhờ chữ T, MassTransit sẽ biết chính xác tên tờ giấy là ChargerConnectedEvent chứ không phải IntegrationEvent chung chung
         await _publishEndpoint.Publish(@event, cancellationToken);
     }
 }

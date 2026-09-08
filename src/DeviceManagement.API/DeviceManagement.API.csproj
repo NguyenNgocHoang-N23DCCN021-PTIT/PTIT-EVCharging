@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BuildingBlocks\SharedKernel\SharedKernel.csproj" />
+    <ProjectReference Include="..\BuildingBlocks\EventBusRabbitMQ\EventBusRabbitMQ.csproj" />
   </ItemGroup>
 
 </Project>
