@@ -4,7 +4,8 @@ using EventBusRabbitMQ;
 using MassTransit;
 using SharedKernel.Events;
 var builder = WebApplication.CreateBuilder(args);
-
+// Bật bộ phát sóng OpenTelemetry để báo cáo cho Aspire Dashboard
+builder.AddServiceDefaults();
 // Khởi tạo Swagger để có giao diện kiểm thử API
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -60,7 +61,7 @@ app.MapPost("/api/sessions/stop", async (string chargerId, IDistributedCache cac
     }
 
     // Tính toán thời lượng sạc (tính bằng phút) để phục vụ cho việc tính tiền sau này
-    var startTime = DateTime.Parse(startTimeString);
+    var startTime = DateTime.Parse(startTimeString).ToUniversalTime();
     var endTime = DateTime.UtcNow;
     var durationMinutes = (endTime - startTime).TotalMinutes;
 
