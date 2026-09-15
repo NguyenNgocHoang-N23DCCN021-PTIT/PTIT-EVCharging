@@ -1,44 +1,59 @@
+using Billing.API.Consumers;
+using Billing.API.Infrastructure;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// 1. Gắn chip theo dõi OpenTelemetry (Aspire Dashboard)
+builder.AddServiceDefaults();
+
+// 2. KẾT NỐI DATABASE (POSTGRESQL)
+// Aspire sẽ tự động tìm chuỗi kết nối "billing-db" do AppHost cấp phát
+builder.AddNpgsqlDbContext<BillingDbContext>("billing-db");
+
+// 3. KẾT NỐI RABBITMQ & ĐĂNG KÝ NGƯỜI LẮNG NGHE (CONSUMER)
+builder.Services.AddMassTransit(x =>
+{
+    // Báo cho MassTransit biết sự tồn tại của Sát thủ thầm lặng
+    x.AddConsumer<SessionEndedEventConsumer>();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration.GetConnectionString("rabbitmq-bus"));
+        
+        // Lệnh này cực kỳ quan trọng: Nó bảo RabbitMQ tự động tạo các Hộp thư (Queue)
+        // và gắn Consumer của chúng ta vào đó để chờ chực sự kiện bay tới.
+        cfg.ConfigureEndpoints(context); 
+    });
+});
+
+// Thêm Swagger để dễ Test
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+// Tự động Apply Migration khi khởi động App (Tuyệt chiêu của hệ thống Microservices)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<BillingDbContext>();
+    db.Database.Migrate();
+}
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-var summaries = new[]
+// 4. API KIỂM TRA SỐ DƯ VÍ
+app.MapGet("/api/wallets/{chargerId}", async (string chargerId, BillingDbContext db) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    var wallet = await db.Wallets.FirstOrDefaultAsync(w => w.UserId == chargerId);
+    if (wallet == null) return Results.NotFound("Khách hàng này chưa có ví điện tử.");
+    return Results.Ok(new { KhachHang = chargerId, SoDu = wallet.Balance });
 })
-.WithName("GetWeatherForecast")
+.WithName("GetWalletBalance")
 .WithOpenApi();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
