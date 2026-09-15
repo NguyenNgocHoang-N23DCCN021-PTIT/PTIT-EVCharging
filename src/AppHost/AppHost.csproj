@@ -25,6 +25,7 @@
     <ProjectReference Include="..\Billing.API\Billing.API.csproj" />
     <ProjectReference Include="..\Identity.API\Identity.API.csproj" />
     <ProjectReference Include="..\ApiGateway\ApiGateway.csproj" />
+    <ProjectReference Include="..\Notification.API\Notification.API.csproj" />
   </ItemGroup>
 
 </Project>

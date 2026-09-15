@@ -1,3 +1,4 @@
+using EventBus.Events;
 namespace SharedKernel.Events;
 
 // Khai báo bản ghi sự kiện Thanh toán hoàn tất
