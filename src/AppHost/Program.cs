@@ -32,6 +32,9 @@ builder.AddProject<Projects.Billing_API>("billing-api")
 // 6. Identity quản lý user, lưu tài khoản vào Postgres
 builder.AddProject<Projects.Identity_API>("identity-api")
        .WithReference(identityDb);
+// [MỚI THÊM] 7. Notification lắng nghe sự kiện từ RabbitMQ để nhắn tin "Ting ting"
+builder.AddProject<Projects.Notification_API>("notification-api")
+       .WithReference(rabbitmq);
 // Đăng ký API Gateway vào hệ thống
 var deviceApi = builder.AddProject<Projects.DeviceManagement_API>("device-management-api")
                        .WithReference(deviceDb)
