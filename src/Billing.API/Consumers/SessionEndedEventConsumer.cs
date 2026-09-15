@@ -41,6 +41,9 @@ public class SessionEndedEventConsumer : IConsumer<SessionEndedEvent>
 
         // 3. CHỐT SỔ TẤT CẢ GIAO DỊCH VÀO DATABASE
         await _dbContext.SaveChangesAsync();
+        // [MỚI THÊM] 4. NÉM SỰ KIỆN THANH TOÁN HOÀN TẤT LÊN BẢNG THÔNG BÁO RABBITMQ
+        var toGiay = new PaymentCompletedEvent(message.ChargerId, invoice.TotalAmount);
+        await context.Publish(toGiay);
 
         Console.WriteLine($"[BILLING] Trạm {message.ChargerId}: Hóa đơn {invoice.TotalAmount:C}. Số dư ví còn lại: {wallet.Balance:C}");
     }
