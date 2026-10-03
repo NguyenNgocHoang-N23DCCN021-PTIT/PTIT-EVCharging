@@ -3,6 +3,8 @@ using EventBus.Abstractions;
 using EventBusRabbitMQ;
 using MassTransit;
 using SharedKernel.Events;
+using SessionManagement.API.Hubs;
+
 var builder = WebApplication.CreateBuilder(args);
 // Bật bộ phát sóng OpenTelemetry để báo cáo cho Aspire Dashboard
 builder.AddServiceDefaults();
@@ -23,6 +25,9 @@ builder.Services.AddMassTransit(x =>
     });
 });
 builder.Services.AddScoped<IEventBus, RabbitMQEventBus>();
+// Đăng ký dịch vụ SignalR vào hệ thống DI Container để máy chủ sẵn sàng xử lý các kết nối WebSocket
+builder.Services.AddSignalR();
+
 
 var app = builder.Build();
 
@@ -85,5 +90,8 @@ app.MapPost("/api/sessions/stop", async (string chargerId, IDistributedCache cac
 })
 .WithName("StopSession")
 .WithOpenApi();
+
+// Mở đường dẫn Endpoint để Mobile App hoặc Web Client có thể kết nối WebSocket vào ChargingHub
+app.MapHub<ChargingHub>("/hubs/charging");
 
 app.Run();
