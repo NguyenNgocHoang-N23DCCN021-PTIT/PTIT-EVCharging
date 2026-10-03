@@ -4,6 +4,8 @@ using EventBusRabbitMQ;
 using MassTransit;
 using SharedKernel.Events;
 using SessionManagement.API.Hubs;
+using SessionManagement.API.Workers;
+
 
 var builder = WebApplication.CreateBuilder(args);
 // Bật bộ phát sóng OpenTelemetry để báo cáo cho Aspire Dashboard
@@ -28,6 +30,8 @@ builder.Services.AddScoped<IEventBus, RabbitMQEventBus>();
 // Đăng ký dịch vụ SignalR vào hệ thống DI Container để máy chủ sẵn sàng xử lý các kết nối WebSocket
 builder.Services.AddSignalR();
 
+// Đăng ký Background Worker để ASP.NET Core tự động kích hoạt tiến trình ngầm giả lập gửi số đo sạc
+builder.Services.AddHostedService<ChargingSimulationWorker>();
 
 var app = builder.Build();
 
