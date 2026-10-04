@@ -36,5 +36,9 @@
     
     <!-- API Gateway -->
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.2.0" />
+        <!-- API Gateway & Service Discovery -->
+    <PackageVersion Include="Yarp.ReverseProxy" Version="2.2.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="8.2.0" />
+
   </ItemGroup>
 </Project>

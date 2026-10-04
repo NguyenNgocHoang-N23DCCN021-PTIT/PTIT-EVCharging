@@ -15,7 +15,9 @@ builder.Services.AddMassTransit(x =>
     x.UsingRabbitMq((context, cfg) =>
     {
         // Kết nối vào Bưu điện RabbitMQ (chuỗi kết nối do AppHost bơm vào)
-        cfg.Host(builder.Configuration.GetConnectionString("rabbitmq"));
+        // Đổi từ "rabbitmq" thành đúng tên "rabbitmq-bus" do AppHost cung cấp
+        cfg.Host(builder.Configuration.GetConnectionString("rabbitmq-bus"));
+
         
         // Tự động xây Hộp thư (Queue) và móc dây (Binding) cho Sát thủ
         cfg.ConfigureEndpoints(context);

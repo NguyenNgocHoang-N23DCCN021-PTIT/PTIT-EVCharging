@@ -3,9 +3,10 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. Nhúng ServiceDefaults (Log, Đo lường...)
 builder.AddServiceDefaults();
 
-// 2. Kích hoạt tính năng YARP Reverse Proxy và đọc cấu hình từ file appsettings.json
+// 2. Kích hoạt tính năng YARP Reverse Proxy, đọc cấu hình và BẬT BỘ PHÂN GIẢI SERVICE DISCOVERY CỦA ASPIRE
 builder.Services.AddReverseProxy()
-       .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+       .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+       .AddServiceDiscoveryDestinationResolver(); // <-- Thêm dòng này để YARP hiểu địa chỉ https+http://
 
 var app = builder.Build();
 

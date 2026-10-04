@@ -6,7 +6,9 @@
 
   <ItemGroup>
     <PackageReference Include="Yarp.ReverseProxy" />
+    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" />
   </ItemGroup>
+
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>

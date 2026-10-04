@@ -34,11 +34,34 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 // Tự động Apply Migration khi khởi động App (Tuyệt chiêu của hệ thống Microservices)
+// Tự động Apply Migration khi khởi động App với cơ chế Retry an toàn (chờ PostgreSQL sẵn sàng)
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<BillingDbContext>();
-    db.Database.Migrate();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    
+    // Thử kết nối và áp dụng Migration, lặp lại tối đa 10 lần nếu database đang khởi tạo
+    for (int retry = 1; retry <= 10; retry++)
+    {
+        try
+        {
+            db.Database.Migrate();
+            logger.LogInformation("✅ Kết nối và khởi tạo Billing Database thành công!");
+            break; // Thành công thì thoát vòng lặp để app chạy tiếp
+        }
+        catch (Exception ex)
+        {
+            if (retry == 10)
+            {
+                logger.LogError(ex, "❌ Không thể kết nối tới Database sau 10 lần thử.");
+                throw;
+            }
+            logger.LogWarning("⏳ PostgreSQL đang khởi tạo cơ sở dữ liệu... Đợi 3 giây và thử lại lần {Retry}/10", retry);
+            Thread.Sleep(3000);
+        }
+    }
 }
+
 
 if (app.Environment.IsDevelopment())
 {
