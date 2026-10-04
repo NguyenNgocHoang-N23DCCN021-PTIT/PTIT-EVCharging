@@ -9,7 +9,8 @@
     <PackageVersion Include="Aspire.Hosting.Redis" Version="8.2.0" />
     <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.2.0" />
     <PackageVersion Include="Aspire.StackExchange.Redis.DistributedCaching" Version="8.2.0" />
-    
+     <!-- Thư viện Bảo mật & Xác thực JWT Token -->
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
     <!-- Thư viện RabbitMQ -->
     <PackageVersion Include="MassTransit.RabbitMQ" Version="8.2.0" />
     
@@ -36,8 +37,7 @@
     
     <!-- API Gateway -->
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.2.0" />
-        <!-- API Gateway & Service Discovery -->
-    <PackageVersion Include="Yarp.ReverseProxy" Version="2.2.0" />
+    <!-- API Gateway & Service Discovery -->
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="8.2.0" />
 
   </ItemGroup>
